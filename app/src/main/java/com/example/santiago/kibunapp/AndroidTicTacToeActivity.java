@@ -31,6 +31,7 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
    // static final int DIALOG_DIFFICULTY_ID = 0;
     static final int DIALOG_QUIT_ID = 1;
 
+    private int player;
     private TicTacToeGame mGame;
     // Buttons making up the board
     private Button mBoardButtons[];
@@ -174,7 +175,8 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mSoundOn = mPrefs.getBoolean("sound", true);
-
+        Bundle b = getIntent().getExtras();
+        player = b.getInt("player");
 
 
         //mPrefs = getSharedPreferences("ttt_prefs", MODE_PRIVATE);
