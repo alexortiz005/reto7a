@@ -23,6 +23,12 @@ import android.widget.TextView;
 import android.graphics.Color;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -31,14 +37,17 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
    // static final int DIALOG_DIFFICULTY_ID = 0;
     static final int DIALOG_QUIT_ID = 1;
 
-    private int player;
+    private char player;
+    private String gameName;
+    private DatabaseReference mDatabase;
+
     private TicTacToeGame mGame;
     // Buttons making up the board
     private Button mBoardButtons[];
 
     MediaPlayer mHumanMediaPlayer;
     MediaPlayer mComputerMediaPlayer;
-    private char mTurn = TicTacToeGame.HUMAN_PLAYER;
+    private char mTurn;
 
     // Various text displayed
     private TextView mInfoTextView;
@@ -54,6 +63,8 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
     int turn;
     int selected;
 
+
+
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         public boolean onTouch(View v, MotionEvent event) {
 
@@ -62,15 +73,16 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
             int row = (int) event.getY() / mBoardView.getBoardCellHeight();
             int pos = row * 3 + col;
             //Check if position is enbales
-            if (!mGameOver && mTurn == TicTacToeGame.HUMAN_PLAYER) {
-                setMove(TicTacToeGame.HUMAN_PLAYER, pos);
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+            if (!mGameOver && mTurn == player && posEnabled(pos)) {
+                setMove(player, pos);
+                checkWinner();
+                //Handler handler = new Handler();
+                /*handler.postDelayed(new Runnable() {
                     public void run() {
                         checkWinner();
                     }
-                }, 1000);
+                }, 1000);*/
 
 
             }
@@ -176,9 +188,9 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mSoundOn = mPrefs.getBoolean("sound", true);
         Bundle b = getIntent().getExtras();
-        player = b.getInt("player");
-
-
+        player = b.getChar("player");
+        gameName = b.getString("gameName");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         //mPrefs = getSharedPreferences("ttt_prefs", MODE_PRIVATE);
 
         mInfoTextView = (TextView) findViewById(R.id.information);
@@ -190,7 +202,7 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
         mBoardView.setBoardColor(mPrefs.getInt("board_color", R.color.defaultBoardColor));
         // Listen for touches on the board
         mBoardView.setOnTouchListener(mTouchListener);
-
+       // addDataBaseListener();
         //mGame.setDifficultyLevel(TicTacToeGame.DifficultyLevel.valueOf(mPrefs.getString("difficulty", TicTacToeGame.DifficultyLevel.Expert.name())));
         String difficultyLevel = mPrefs.getString("difficulty_level",
                 getResources().getString(R.string.difficulty_harder));
@@ -225,6 +237,45 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
         }
         displayScores();
 
+
+    }
+
+   private void addDataBaseListener(){
+        //DatabaseReference players = mDatabase.child("games").child(gameName).child("players");
+        DatabaseReference player_turn = mDatabase.child("games").child(gameName).child("player_turn");
+        DatabaseReference board = mDatabase.child("games").child(gameName).child("board");
+
+
+        player_turn.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mTurn = dataSnapshot.getValue(String.class).charAt(0);
+
+                //
+                for(DataSnapshot notificationSnapshot: dataSnapshot.getChildren()){
+                    Notification n = notificationSnapshot.getValue(Notification.class);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("NOTIFI", "Failed to read value.", error.toException());
+            }
+        });
+
+        board.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot notificationSnapshot: dataSnapshot.getChildren()){
+                    Notification n = notificationSnapshot.getValue(Notification.class);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("NOTIFI", "Failed to read value.", error.toException());
+            }
+        });
 
     }
 
@@ -552,6 +603,10 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
 
     private void updateDisplay(){
         mResultsTextView.setText("Human: "+humanWins+" Ties: "+ ties + " PC: " + androidWins);
+    }
+
+    boolean posEnabled(int pos){
+        return mGame.posEnabled(pos);
     }
 
 }

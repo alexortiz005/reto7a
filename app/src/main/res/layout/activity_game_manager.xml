@@ -5,12 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GameManagerActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/b_new_game"
-        android:layout_width="343dp"
-        android:layout_height="78dp"
-        android:text="Crear nuevo Juego"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp" />
+        <Button
+            android:id="@+id/b_new_game"
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:text="Crear nuevo Juego"
+             />
+        <TextView
+            android:id="@+id/t_game_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Juegos Disponibles"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/b_new_game"
+            />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView"
+            android:layout_below="@+id/t_game_list"
+            >
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/ll_btns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

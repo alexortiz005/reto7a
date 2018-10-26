@@ -30,7 +30,11 @@ public class TicTacToeGame {
     }
 
 
-
+    public boolean posEnabled(int pos){
+        if(mBoard[pos] == OPEN_SPOT)
+            return true;
+        return false;
+    }
 
     /** Clear the board of all X's and O's by setting all spots to OPEN_SPOT. */
     public void clearBoard(){
