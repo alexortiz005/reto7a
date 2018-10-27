@@ -15,6 +15,14 @@
         tools:layout_editor_absoluteY="0dp"
         tools:ignore="MissingConstraints">
 
+        <TextView
+            android:id="@+id/identity"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center_horizontal"
+            android:text="Te corresponden las"
+            android:textSize="20dp" />
 
         <com.example.santiago.kibunapp.BoardView
             android:id="@+id/board"
