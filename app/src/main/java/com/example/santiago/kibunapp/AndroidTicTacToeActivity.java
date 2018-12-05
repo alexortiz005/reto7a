@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -143,6 +144,8 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
     void checkWinner(){
         int winner = mGame.checkForWinner();
         Log.d("winner: ", Integer.toString(winner));
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         /*if (winner == 0) {
             mInfoTextView.setText("Turno de " + Character.toString(mTurn));
             int move = mGame.getComputerMove();
@@ -160,9 +163,13 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
             }
         else if (winner == 1) {
             mInfoTextView.setText(R.string.result_tie);
-            if(!mGameOver) ties++;
-            mResultsTextView.setText("Human: "+humanWins+" Ties: "+ ties + " PC: " + androidWins);
+            if(!mGameOver){
+                ties++;
+                mDatabase.child("games").child(gameName).child("scores").child("ties").setValue(ties);
+            }
+            mResultsTextView.setText("X wins: "+humanWins+" - Empates: "+ ties + " - O wins: " + androidWins);
             mGameOver = true;
+            mDatabase.child("games").child(gameName).child("game_over").setValue(true);
 
         }
         else if (winner == 2) {
@@ -171,16 +178,24 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
             String msg = mPrefs.getString("victory_message", defaultMessage);
             //Log.d("win msg : ", msg);
             mInfoTextView.setText(Character.toString(TicTacToeGame.HUMAN_PLAYER) + " ganador!");
-            if(!mGameOver)humanWins++;
-            mResultsTextView.setText("Human: "+humanWins+" Ties: "+ ties + " PC: " + androidWins);
+            if(!mGameOver){
+                humanWins++;
+                mDatabase.child("games").child(gameName).child("scores").child("x_wins").setValue(humanWins);
+            }
+            mResultsTextView.setText("X wins: "+humanWins+" - Empates: "+ ties + " - O wins: " + androidWins);
             mGameOver = true;
+            mDatabase.child("games").child(gameName).child("game_over").setValue(true);
 
         }
         else{
             mInfoTextView.setText(Character.toString(TicTacToeGame.COMPUTER_PLAYER) + " ganador!");
-            if(!mGameOver)androidWins++;
-            mResultsTextView.setText("Human: "+humanWins+" Ties: "+ ties + " PC: " + androidWins);
+            if(!mGameOver){
+                androidWins++;
+                mDatabase.child("games").child(gameName).child("scores").child("o_wins").setValue(humanWins);
+            }
+            mResultsTextView.setText("X wins: "+humanWins+" - Empates: "+ ties + " - O wins: " + androidWins);
             mGameOver = true;
+            mDatabase.child("games").child(gameName).child("game_over").setValue(true);
 
         }
     }
@@ -246,6 +261,47 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
 
     }
 
+    private void startNewGame(){
+        if(mGameOver || turn == -1){
+            List<String> board = Arrays.asList(new String[]{" "," "," "," "," "," "," "," "," "});
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            mDatabase.child("games").child(gameName).child("board").setValue(board);
+            turn++;
+            mDatabase.child("games").child(gameName).child("init_turn").setValue(turn);
+            if(turn == 0){
+
+            }else{
+                if(turn % 2 == 0){
+                    mDatabase.child("games").child(gameName).child("player_turn").setValue("X");
+                }else{
+                    mDatabase.child("games").child(gameName).child("player_turn").setValue("O");
+                }
+            }
+
+
+
+            //mGame.clearBoard();
+            mBoardView.invalidate();
+
+            mResultsTextView.setText("X wins: "+humanWins+" - Empates: "+ ties + " - O wins: " + androidWins);
+            mGameOver = false;
+            mDatabase.child("games").child(gameName).child("game_over").setValue(false);
+
+        /*if(turn % 2 == 0){
+            //int move = mGame.getComputerMove();
+            //setMove(TicTacToeGame.COMPUTER_PLAYER, move);
+            //TODO
+            mInfoTextView.setText(R.string.turn_human);
+        }else{
+            mInfoTextView.setText(R.string.first_human);
+        }*/
+        }else{
+            Toast.makeText(this, "Juego no terminado",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,26 +338,28 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
         else
             mGame.setDifficultyLevel(TicTacToeGame.DifficultyLevel.Expert);
 
+        turn = -1;
+        humanWins = 0;
+        androidWins = 0;
+        ties = 0;
         if (savedInstanceState == null) {
             startNewGame();
             mGameOver = false;
-            humanWins = mPrefs.getInt("humanWins", 0);
-            androidWins = mPrefs.getInt("androidWins", 0);
-            ties = mPrefs.getInt("ties", 0);
+            //humanWins = mPrefs.getInt("humanWins", 0);
+            //androidWins = mPrefs.getInt("androidWins", 0);
+            //ties = mPrefs.getInt("ties", 0);
 
-            turn = 0;
         }
         else {
             // Restore the game's state
             mGame.setBoardState(savedInstanceState.getCharArray("board"));
             mGameOver = savedInstanceState.getBoolean("mGameOver");
             mInfoTextView.setText(savedInstanceState.getCharSequence("info"));
-            humanWins = savedInstanceState.getInt("humanWins");
-            androidWins = savedInstanceState.getInt("androidWins");
-            ties = savedInstanceState.getInt("ties");
-            turn = savedInstanceState.getInt("turn");
+            //humanWins = savedInstanceState.getInt("humanWins");
+            //androidWins = savedInstanceState.getInt("androidWins");
+            //ties = savedInstanceState.getInt("ties");
             selected = savedInstanceState.getInt("selected");
-            mTurn = savedInstanceState.getChar("mTurn");
+            //mTurn = savedInstanceState.getChar("mTurn");
 
         }
         displayScores();
@@ -310,9 +368,11 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
     }
 
    private void addDataBaseListener(){
-        //DatabaseReference players = mDatabase.child("games").child(gameName).child("players");
+        DatabaseReference scores = mDatabase.child("games").child(gameName).child("scores");
         DatabaseReference player_turn = mDatabase.child("games").child(gameName).child("player_turn");
         DatabaseReference board = mDatabase.child("games").child(gameName).child("board");
+       DatabaseReference init = mDatabase.child("games").child(gameName).child("init_turn");
+       DatabaseReference gameOver = mDatabase.child("games").child(gameName).child("game_over");
 
 
         player_turn.addValueEventListener(new ValueEventListener() {
@@ -348,6 +408,46 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
                 Log.w("NOTIFI", "Failed to read value.", error.toException());
             }
         });
+
+        scores.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                humanWins = dataSnapshot.child("x_wins").getValue(Integer.class);
+                androidWins = dataSnapshot.child("o_wins").getValue(Integer.class);
+                ties = dataSnapshot.child("ties").getValue(Integer.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("NOTIFI", "Failed to read value.", databaseError.toException());
+
+            }
+        });
+
+       init.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               turn = dataSnapshot.getValue(Integer.class);
+           }
+           @Override
+           public void onCancelled(DatabaseError error) {
+               // Failed to read value
+               Log.w("NOTIFI", "Failed to read value.", error.toException());
+           }
+       });
+
+       gameOver.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               mGameOver = dataSnapshot.getValue(Boolean.class);
+
+           }
+           @Override
+           public void onCancelled(DatabaseError error) {
+               // Failed to read value
+               Log.w("NOTIFI", "Failed to read value.", error.toException());
+           }
+       });
 
     }
 
@@ -411,10 +511,12 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(this, Settings.class), 0);
                 return true;
             case R.id.reset_socores:
-                humanWins = 0;
-                ties = 0;
-                androidWins = 0;
-                updateDisplay();
+                //humanWins = 0;
+                //ties = 0;
+                //androidWins = 0;
+                //updateDisplay();
+                Toast.makeText(this, "No disponible en modo online",
+                        Toast.LENGTH_LONG).show();
                 return true;
             case R.id.about:
                 showDialog(10);
@@ -422,6 +524,13 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("games").child(gameName).child("players").setValue(999);
     }
 
     @Override
@@ -524,29 +633,12 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
 
 
     private void displayScores() {
-        mResultsTextView.setText("Human: "+humanWins+" Ties: "+ ties + " PC: " + androidWins);
+        mResultsTextView.setText("X wins: "+humanWins+" - Empates: "+ ties + " - O wins: " + androidWins);
     }
 
 
 
-    private void startNewGame(){
 
-        mGame.clearBoard();
-        mBoardView.invalidate();
-
-        mResultsTextView.setText("Human: "+humanWins+" Ties: "+ ties + " PC: " + androidWins);
-        mGameOver = false;
-        turn++;
-        if(turn % 2 == 0){
-            //int move = mGame.getComputerMove();
-            //setMove(TicTacToeGame.COMPUTER_PLAYER, move);
-            //TODO
-            mInfoTextView.setText(R.string.turn_human);
-        }else{
-            mInfoTextView.setText(R.string.first_human);
-        }
-
-    }
 
 
 
@@ -622,7 +714,7 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
     }*/
 
     private void updateDisplay(){
-        mResultsTextView.setText("Human: "+humanWins+" Ties: "+ ties + " PC: " + androidWins);
+        mResultsTextView.setText("X wins: "+humanWins+" - Empates: "+ ties + " - O wins: " + androidWins);
     }
 
     boolean posEnabled(int pos){

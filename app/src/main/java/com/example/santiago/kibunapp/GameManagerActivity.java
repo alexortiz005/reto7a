@@ -50,6 +50,11 @@ public class GameManagerActivity extends AppCompatActivity {
                 mDatabase.child("games").child(gameName).child("players").setValue(1);
                 mDatabase.child("games").child(gameName).child("player_turn").setValue("N");
                 mDatabase.child("games").child(gameName).child("board").setValue(board);
+                mDatabase.child("games").child(gameName).child("init_turn").setValue(-1);
+                mDatabase.child("games").child(gameName).child("game_over").setValue(false);
+                mDatabase.child("games").child(gameName).child("scores").child("x_wins").setValue(0);
+                mDatabase.child("games").child(gameName).child("scores").child("o_wins").setValue(0);
+                mDatabase.child("games").child(gameName).child("scores").child("ties").setValue(0);
 
                 Intent myIntent = new Intent(GameManagerActivity.this, AndroidTicTacToeActivity.class);
                 myIntent.putExtra("player", 'X');
