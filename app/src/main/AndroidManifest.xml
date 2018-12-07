@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.santiago.kibunapp">
+    package="com.example.ticactoe.reto7a">
 
     <application
         android:allowBackup="true"
@@ -19,13 +19,13 @@
             </intent-filter>
         </activity>
         -->
-        <activity android:name=".AndroidTicTacToeActivity">
+        <activity android:name="com.example.ticactoe.reto7a.AndroidTicTacToeActivity">
 
         </activity>
         <activity
-            android:name=".Settings"
+            android:name="com.example.ticactoe.reto7a.Settings"
             android:label="Settings" />
-        <activity android:name=".GameManagerActivity">
+        <activity android:name="com.example.ticactoe.reto7a.GameManagerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

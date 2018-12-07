@@ -4,7 +4,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.santiago.kibunapp"
+        applicationId "com.example.ticactoe.reto7a"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1

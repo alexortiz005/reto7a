@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "1012786068466",
+    "firebase_url": "https://zeta-flare-126107.firebaseio.com",
+    "project_id": "zeta-flare-126107"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012786068466:android:8a32598b8cf8ce7e",
+        "android_client_info": {
+          "package_name": "com.example.ticactoe.reto7a"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012786068466-u012moi4bm9asrhljbkultasggrne276.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzUUWAJn3RItvohzwi7XJARAYnLKQxfcE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

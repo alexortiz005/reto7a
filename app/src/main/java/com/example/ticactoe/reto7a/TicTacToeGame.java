@@ -1,4 +1,4 @@
-package com.example.santiago.kibunapp;
+package com.example.ticactoe.reto7a;
 
 import java.util.InputMismatchException;
 import java.util.Random;

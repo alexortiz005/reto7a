@@ -1,4 +1,4 @@
-package com.example.santiago.kibunapp;
+package com.example.ticactoe.reto7a;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

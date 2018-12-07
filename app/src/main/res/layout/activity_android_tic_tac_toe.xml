@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AndroidTicTacToeActivity">
+    tools:context="com.example.ticactoe.reto7a.AndroidTicTacToeActivity">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -22,7 +22,7 @@
 
 
 
-        <com.example.santiago.kibunapp.BoardView
+        <com.example.ticactoe.reto7a.BoardView
             android:id="@+id/board"
             android:layout_width="300dp"
             android:layout_height="300dp"

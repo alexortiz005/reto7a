@@ -1,11 +1,8 @@
-package com.example.santiago.kibunapp;
+package com.example.ticactoe.reto7a;
 
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
