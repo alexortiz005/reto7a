@@ -30,6 +30,8 @@ public class TicTacToeGame {
     }
 
 
+
+
     public boolean posEnabled(int pos){
         if(mBoard[pos] == OPEN_SPOT)
             return true;
