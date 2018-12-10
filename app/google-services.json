@@ -1,26 +1,35 @@
 {
   "project_info": {
-    "project_number": "1012786068466",
-    "firebase_url": "https://zeta-flare-126107.firebaseio.com",
-    "project_id": "zeta-flare-126107"
+    "project_number": "795341660507",
+    "firebase_url": "https://tictactoereto7a.firebaseio.com",
+    "project_id": "tictactoereto7a",
+    "storage_bucket": "tictactoereto7a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1012786068466:android:8a32598b8cf8ce7e",
+        "mobilesdk_app_id": "1:795341660507:android:8a32598b8cf8ce7e",
         "android_client_info": {
           "package_name": "com.example.ticactoe.reto7a"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1012786068466-u012moi4bm9asrhljbkultasggrne276.apps.googleusercontent.com",
+          "client_id": "795341660507-d13g96rma3gp9ouiembmeh9h5fe2bs94.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ticactoe.reto7a",
+            "certificate_hash": "8a77f1ba0bfd7d779306765fbc28943ea47fdf7b"
+          }
+        },
+        {
+          "client_id": "795341660507-k8glcr813qh5u8dntrvbh3jic63lu3aj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDzUUWAJn3RItvohzwi7XJARAYnLKQxfcE"
+          "current_key": "AIzaSyA91WbwvWgc2i0c3HrC_xyZHFN_oqizV2k"
         }
       ],
       "services": {
@@ -28,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "795341660507-k8glcr813qh5u8dntrvbh3jic63lu3aj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

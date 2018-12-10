@@ -316,7 +316,7 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
         mInfoTextView = (TextView) findViewById(R.id.information);
         mResultsTextView = (TextView) findViewById(R.id.results);
         TextView identity = (TextView) findViewById(R.id.identity);
-        identity.setText("Te corresponden las " + Character.toString(player));
+        identity.setText("JUEGAN LAS " + Character.toString(player));
         mGame = new TicTacToeGame();
         mBoardView = (BoardView) findViewById(R.id.board);
         mBoardView.setGame(mGame);
@@ -630,7 +630,7 @@ public class AndroidTicTacToeActivity extends AppCompatActivity {
 
 
     private void displayScores() {
-        mResultsTextView.setText("X wins: "+humanWins+" - Empates: "+ ties + " - O wins: " + androidWins);
+        mResultsTextView.setText("X: "+humanWins+" - DRAW: "+ ties + " - 0: " + androidWins);
     }
 
 
